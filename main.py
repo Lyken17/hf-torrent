@@ -11,27 +11,25 @@ def run_command(cmd):
     return stdout, stderr
 
 
-def enumerate_hf_repo():
+def enumerate_hf_repo(folder_base="bert-base-uncased"):
     exclude = set(
         [
-            "bert-base-uncased/.git",
+            f"{folder_base}/.git",
         ]
     )
-    for root, dirs, files in os.walk("bert-base-uncased", topdown=False):
+    for root, dirs, files in os.walk(f"{folder_base}", topdown=False):
         # print(dirs)
         dirs[:] = [d for d in dirs if d not in exclude]
         # [dirs.remove(d) for d in list(dirs) if d in exclude]
         for name in files:
-            if root.startswith("bert-base-uncased/.git"):
-                continue
-            if name.startswith(".DS_Store"):
+            if root.startswith(f"{folder_base}/.git"):
                 continue
             if name.startswith(".DS_Store"):
                 continue
             yield osp.join(root, name)
 
 
-repo = "bert_base_uncased"
+repo = "bert-base-uncased"
 for fpath in enumerate_hf_repo():
     folder = fpath.split("/")[0]
     rel_path = "/".join(fpath.split("/")[1:])
