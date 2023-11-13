@@ -32,13 +32,18 @@ def enumerate_hf_repo(folder_base="bert-base-uncased"):
 repo = "bert-base-uncased"
 if len(sys.argv) >= 2:
     repo = sys.argv[-1]
+if repo[-1] == "/":
+    repo = repo[:-1]
 print(repo)
 
 FORMAT_NAME = lambda s: s.replace("-", "_").replace("/", "-")
 
 for fpath in enumerate_hf_repo(folder_base=repo):
-    folder = fpath.split("/")[0]
-    rel_path = "/".join(fpath.split("/")[1:])
+    # folder = fpath.split("/")[0]
+    # rel_path = "/".join(fpath.split("/")[1:])
+    folder = repo
+    rel_path = fpath.replace(repo, "")[1:]
+    print("DEBUG:", fpath, folder, rel_path)
     cmd = f"cd {folder}; git log --format=format:%H {rel_path}"
     stdout, stderr = run_command(cmd)
     print(folder, rel_path, "git id: ", stdout)
@@ -57,6 +62,6 @@ for fpath in enumerate_hf_repo(folder_base=repo):
     stdout, stderr = run_command(cmd)
     print(stdout, stderr)
     print(cmd)
-    print("--" * 40)
+    print("--" * 50)
 
     # exit(0)
