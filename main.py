@@ -30,7 +30,11 @@ def enumerate_hf_repo(folder_base="bert-base-uncased"):
 
 
 repo = "bert-base-uncased"
-for fpath in enumerate_hf_repo():
+if len(sys.argv) >= 2:
+    repo = sys.argv[-1]
+print(repo)
+
+for fpath in enumerate_hf_repo(folder_base=repo):
     folder = fpath.split("/")[0]
     rel_path = "/".join(fpath.split("/")[1:])
     cmd = f"cd {folder}; git log --format=format:%H {rel_path}"
