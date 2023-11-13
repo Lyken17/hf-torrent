@@ -34,6 +34,8 @@ if len(sys.argv) >= 2:
     repo = sys.argv[-1]
 print(repo)
 
+FORMAT_NAME = lambda s: s.replace("-", "_").replace("/", "-")
+
 for fpath in enumerate_hf_repo(folder_base=repo):
     folder = fpath.split("/")[0]
     rel_path = "/".join(fpath.split("/")[1:])
@@ -43,11 +45,12 @@ for fpath in enumerate_hf_repo(folder_base=repo):
 
     sha1 = stdout.strip().split()[0]
 
-    torrent_name = rel_path.replace("-", "_").replace("/", "-")
+    torrent_name = FORMAT_NAME(rel_path)
+    repo_name = FORMAT_NAME(repo)
     torrent_path = osp.join("torrent", rel_path) + ".torrent"
     os.makedirs(osp.dirname(torrent_path), exist_ok=True)
     cmd = f"python py3createtorrent.py -t best5 {osp.join(folder, rel_path)} \
-            --name 'bert_base_uncased-{sha1}-{torrent_name}' \
+            --name '{repo_name}-{sha1}-{torrent_name}' \
             --webseed https://huggingface.co/{repo}/resolve/{sha1}/{rel_path} \
             --webseed https://hf-mirror.com/{repo}/resolve/{sha1}/{rel_path} \
             --output {torrent_path} --force"
