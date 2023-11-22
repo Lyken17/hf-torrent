@@ -17,7 +17,7 @@ def make_magnet_from_torrent(file):
     b32hash = base64.b32encode(digest).decode()
     # print(metadata[b'info'][b'name'].decode())
     # print(b'announce' not in metadata)
-    
+
     chosen_hash = sha1hash
     if b"announce" not in metadata:
         magnet = (

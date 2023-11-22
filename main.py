@@ -38,30 +38,40 @@ print(repo)
 
 FORMAT_NAME = lambda s: s.replace("-", "_").replace("/", "-")
 
+fpath_mapping = {}
 for fpath in enumerate_hf_repo(folder_base=repo):
     # folder = fpath.split("/")[0]
     # rel_path = "/".join(fpath.split("/")[1:])
     folder = repo
-    rel_path = fpath.replace(repo, "")[1:]
-    print("DEBUG:", fpath, folder, rel_path)
-    cmd = f"cd {folder}; git log --format=format:%H {rel_path}"
+    fname = fpath.replace(repo, "")[1:]
+    print("DEBUG:", fpath, folder, fname)
+    cmd = f"cd {folder}; git log --format=format:%H {fname}"
     stdout, stderr = run_command(cmd)
-    print(folder, rel_path, "git id: ", stdout)
 
-    sha1 = stdout.strip().split()[0]
+    sha1_list = stdout.strip().split()
+    sha1 = sha1_list[0]
+    
+    print(fpath, "git id: ", sha1_list)
 
-    torrent_name = FORMAT_NAME(rel_path)
+    torrent_name = FORMAT_NAME(fname)
     repo_name = FORMAT_NAME(repo)
-    torrent_path = osp.join("torrent", rel_path) + ".torrent"
+    new_fpath = osp.join("torrent", fpath)
+    torrent_path = new_fpath + ".torrent"
     os.makedirs(osp.dirname(torrent_path), exist_ok=True)
-    cmd = f"python py3createtorrent.py -t best5 {osp.join(folder, rel_path)} \
+    
+    cmd = f"python py3createtorrent.py -t best5 {osp.join(folder, fname)} \
             --name '{repo_name}-{sha1}-{torrent_name}' \
-            --webseed https://huggingface.co/{repo}/resolve/{sha1}/{rel_path} \
-            --webseed https://hf-mirror.com/{repo}/resolve/{sha1}/{rel_path} \
+            --webseed https://huggingface.co/{repo}/resolve/{sha1}/{fname} \
+            --webseed https://hf-mirror.com/{repo}/resolve/{sha1}/{fname} \
             --output {torrent_path} --force"
     stdout, stderr = run_command(cmd)
     print(stdout, stderr)
     print(cmd)
     print("--" * 50)
-
+    
+    fpath_mapping[fpath] = f'{repo_name}-{sha1}-{torrent_name}'
     # exit(0)
+    
+from pprint import pprint
+
+pprint(fpath_mapping)
