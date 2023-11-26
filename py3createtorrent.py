@@ -75,6 +75,7 @@ class Config(object):
         }
         self.advertise = True  # type: Optional[bool]
         self.best_trackers_url = "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt"  # type: str
+        self.default_tracker = "http://1.15.21.149:8000/announce"
 
     def get_path_to_config_file(self) -> str:
         if self.path is None:
@@ -932,7 +933,8 @@ def main() -> None:
     # Handle best[0-9] shortcut.
     if best_shortcut_present:
         new_trackers = [
-            "http://1.15.21.149:8000/announce",
+            # "http://1.15.21.149:8000/announce",
+            config.default_tracker, 
         ]
         for t in trackers:
             m = regexp_best.match(t)
