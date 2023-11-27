@@ -3,6 +3,8 @@ import subprocess
 REPO_BASE_DIR = "hf-repository"
 TORRENT_BASE_DIR = "hf-torrent-store"
 
+def FORMAT_NAME(s): 
+    return s.replace("-", "_").replace("/", "-")
 
 def run_command(cmd):
     out = subprocess.run(
