@@ -934,7 +934,7 @@ def main() -> None:
     if best_shortcut_present:
         new_trackers = [
             # "http://1.15.21.149:8000/announce",
-            config.default_tracker, 
+            config.default_tracker,
         ]
         for t in trackers:
             m = regexp_best.match(t)

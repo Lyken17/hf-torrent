@@ -1,7 +1,5 @@
-facebook/
-Llama-2-7b-hf/
-torrent-llama/
 torrent/
+hf-torrent-store
 hf-repository/
 
 # Byte-compiled / optimized / DLL files
