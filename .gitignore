@@ -1,9 +1,8 @@
 facebook/
 Llama-2-7b-hf/
 torrent-llama/
-bert-base-uncased/
-Llama-2-7b-hf/
 torrent/
+hf-repository/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
