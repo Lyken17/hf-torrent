@@ -1,16 +1,13 @@
 ## HF-Torrent
 
+This repo contains experimental torrent-style download for model weights in huggingface.
 
+The core implementation is `main_hub.py`, which downloads file from huggingface and convert them to seedable torrents.
 
+## How to use
 
-##
-Find the commit history of specific file
+* Create 
 
-```
-git log --format=format:%H <file>
-```
+    ```python generate_popular_torrents.py stabilityai/stable-video-diffusion-img2vid-xt```
 
-Create tensor 
-```
-python py3createtorrent.py -t best5 bert-base-uncased/model.safetensors --webseed https://huggingface.co/bert-base-uncased/resolve/main/model.safetensors
-```
+* Download (WIP)
