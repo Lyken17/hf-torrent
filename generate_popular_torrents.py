@@ -8,7 +8,7 @@ if __name__ == "__main__":
     parser.add_argument("-r-", '--repo', default=None)           
     args = parser.parse_args()
 
-    if args.repo is None:
+    if args.repo is not None:
         main(repo=args.repo)
     else:
         for repo in [
@@ -22,6 +22,5 @@ if __name__ == "__main__":
             "stabilityai/stable-diffusion-xl-base-1.0",
             "stabilityai/stable-diffusion-xl-1.0-tensorrt",
             "stabilityai/stable-diffusion-xl-refiner-1.0",
-            
         ]:
             main(repo=repo)
