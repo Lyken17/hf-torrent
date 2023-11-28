@@ -12,6 +12,7 @@ if __name__ == "__main__":
         main(repo=args.repo)
     else:
         for repo in [
+            "facebook/opt-125m",
             "bert-base-uncased",
             "gpt2",
             "microsoft/resnet-50",

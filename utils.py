@@ -5,6 +5,23 @@ REPO_BASE_DIR = "hf-repository"
 TORRENT_BASE_DIR = "hf-torrent-store"
 
 
+def download_fn(url, fpath):
+    from huggingface_hub.file_download import http_get, _chmod_and_replace
+    import tempfile
+    from functools import partial
+
+    cache_dir = osp.dirname(".cache")
+    temp_file_manager = partial(  # type: ignore
+        tempfile.NamedTemporaryFile, mode="wb", dir=cache_dir, delete=False
+    )
+
+    with temp_file_manager() as temp_file:
+        http_get(url, temp_file)
+    os.makedirs(osp.dirname(fpath), exist_ok=True)
+    _chmod_and_replace(temp_file.name, fpath)
+    return fpath
+
+
 def FORMAT_NAME(s):
     return s.replace("-", "_").replace("/", "-")
 
