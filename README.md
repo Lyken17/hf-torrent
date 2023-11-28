@@ -8,6 +8,7 @@ The core implementation is `main_hub.py`, which downloads file from huggingface 
 
 * Create 
 
-    ```python generate_popular_torrents.py stabilityai/stable-video-diffusion-img2vid-xt```
+    ```python generate_popular_torrents.py -r stabilityai/stable-video-diffusion-img2vid-xt```
 
 * Download (WIP)
+

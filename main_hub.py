@@ -58,6 +58,11 @@ def main(repo = "bert-base-uncased"):
         hf_meta = get_hf_file_metadata(hf_hub_url(repo_id=repo, filename=file_name))
         commit_hash = hf_meta.commit_hash
         
+        if osp.exists(torrent_path):
+            print(f"Skipping {torrent_path} as it already exists.")
+            print("--" * 50)
+            continue    
+        
         cmd = f"python py3createtorrent.py -t best5 {fpath} \
                 --name '{uuid}' \
                 --webseed https://huggingface.co/{repo}/resolve/{commit_hash}/{file_name} \
