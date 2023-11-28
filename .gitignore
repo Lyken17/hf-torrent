@@ -1,5 +1,6 @@
 torrent/
-hf-torrent-store
+hf-files/
+hf-torrent-store/
 hf-repository/
 
 # Byte-compiled / optimized / DLL files
