@@ -6,7 +6,6 @@ import argparse
 import aria2p
 from utils import enumerate_hf_repo, download_fn
 
-
 BASE_FOLDER = "https://raw.githubusercontent.com/Lyken17/hf-torrent-store/master"
 HF_FOLDER = "hf-torrent-downloads"
 HF_MODELS = "hf-models"
