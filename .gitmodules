@@ -1,0 +1,3 @@
+[submodule "hf-torrent-store"]
+	path = hf-torrent-store
+	url = https://github.com/lyken17/hf-torrent-store/
