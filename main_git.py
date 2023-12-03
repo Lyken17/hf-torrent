@@ -3,7 +3,6 @@ import json
 
 from utils import run_command
 
-
 def enumerate_hf_repo(folder_base="bert-base-uncased"):
     exclude = set(
         [
@@ -27,20 +26,15 @@ REPO_BASE_DIR = "hf-repository"
 TORRENT_BASE_DIR = "hf-torrent-store"
 
 
-def main():
+def main(args):
     # repo = "bert-base-uncased"
     # if len(sys.argv) >= 2:
     #     repo = sys.argv[-1]
-    from huggingface_hub import snapshot_download
-    repo = "bert-base-uncased"
-    
-    s = snapshot_download(repo)
-    
-    exit(0)
+    repo = args.repo
 
     if repo[-1] == "/":
         repo = repo[:-1]
-
+    
     print(repo)
 
     FORMAT_NAME = lambda s: s.replace("-", "_").replace("/", "-")
@@ -93,12 +87,14 @@ def main():
     # from pprint import pprint
     # pprint(fpath_mapping)
 
-    with open(
-        osp.join(TORRENT_BASE_DIR, rel_rpath, "_hf_mirror_torrent.json"), "w"
-    ) as fp:
+    with open(osp.join(TORRENT_BASE_DIR, rel_rpath, "_hf_mirror_torrent.json"), "w") as fp:
         json.dump(fpath_mapping, fp, indent=2)
 
 
 if __name__ == "__main__":
+    import argparse
     
-    main()
+    parser = argparse.ArgumentParser(prog='HF Torrent Creator')
+    parser.add_argument('repo')       # positional argument
+    args = parser.parse_args()
+    main(args)
