@@ -7,15 +7,16 @@ if __name__ == "__main__":
     )
     parser.add_argument("-r-", "--repo", default=None)
     args = parser.parse_args()
-    
+
     if args.repo is not None:
         main(repo=args.repo)
     else:
-        import json
-        with open("popular_repos.json", "r") as f:
-            repos = json.load(f)
-        with open("popular_repos_crawled.json", "r") as f:
-            repos += json.load(f)
+        import json, yaml
+        with open("popular-models.yaml", "r") as f:
+            repos = yaml.load(f, Loader=yaml.FullLoader)["repos"]
+        with open("popular-repos-crawled.yaml", "r") as f:
+            repos += yaml.load(f, Loader=yaml.FullLoader)["repos"]
         repos = list(set(repos))
         for repo in repos:
+            print(repo)
             main(repo=repo)

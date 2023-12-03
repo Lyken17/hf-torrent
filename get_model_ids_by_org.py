@@ -32,16 +32,16 @@ for org in [
         headers={"Authorization": f"Bearer {api_token}"},
     )
 
-    import json
+    import json, yaml
     if response.status_code == 200:
-        with open("popular_repos_crawled.json", "r") as f:
-            repos = json.load(f)
+        with open("popular-repos-crawled.yaml", "r") as f:
+            repos = yaml.load(f, Loader=yaml.FullLoader)["repos"]
         models = response.json()
         for model in models:
             print(model["id"])
             repos.append(model["id"])
-        repos = list(set(repos))
-        with open("popular_repos_crawled.json", "w") as f:
-            json.dump(repos, f, indent=2)
+        repos = sorted(list(set(repos)))
+        with open("popular-repos-crawled.yaml", "w") as f:
+            yaml.dump({"repos": repos}, f, default_flow_style=False)
     else:
         print(f"Failed to retrieve models. Status code: {response.status_code}")
