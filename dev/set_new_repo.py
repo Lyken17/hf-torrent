@@ -22,6 +22,6 @@ else:
     dirpath = osp.dirname(fpath)
     print(dirpath)
     os.makedirs(dirpath, exist_ok=True)
-    cmd = f"cd {dirpath}; git clone {url} {repo_name}"
+    cmd = f"mkdir -p {dirpath}; cd {dirpath}; git clone {url} {repo_name}"
     print(cmd)
     run_command(cmd)

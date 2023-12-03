@@ -1,1 +1,4 @@
 bencodepy
+torch
+transformers
+aria2[tui]
