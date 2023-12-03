@@ -19,4 +19,4 @@ if __name__ == "__main__":
         repos = list(set(repos))
         for repo in repos:
             print(repo)
-            main(repo=repo)
+            main(repo=repo, delete_existing=True)

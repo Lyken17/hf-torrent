@@ -8,7 +8,7 @@ REPO_BASE_DIR = "hf-repository"
 TORRENT_BASE_DIR = "hf-torrent-store"
 
 
-def main(repo="bert-base-uncased"):
+def main(repo="bert-base-uncased", delete_existing=False):
     FORMAT_NAME = lambda s: s.replace("-", "_").replace("/", "-")
 
     from huggingface_hub import snapshot_download, hf_hub_url, get_hf_file_metadata
@@ -20,6 +20,9 @@ def main(repo="bert-base-uncased"):
     fpath_mapping["fpath2uuid"] = {}
     fpath_mapping["uuid2fpath"] = {}
 
+    # print(model_fpath)
+    # print(hf_cache_base)
+    # return 
     # Create torrent for folder
     print("--" * 50)
     git_hash = osp.basename(model_fpath)
@@ -80,6 +83,11 @@ def main(repo="bert-base-uncased"):
 
     with open(osp.join(TORRENT_BASE_DIR, repo, "_hf_mirror_torrent.json"), "w") as fp:
         json.dump(fpath_mapping, fp, indent=2)
+        
+    if delete_existing:
+        import shutil
+        print("Removing cache: ", hf_cache_base)
+        shutil.rmtree(hf_cache_base)
 
 
 if __name__ == "__main__":
