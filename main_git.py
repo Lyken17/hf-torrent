@@ -37,12 +37,13 @@ def main(args):
         repo = repo[:-1]
 
     print(repo)
-
     FORMAT_NAME = lambda s: s.replace("-", "_").replace("/", "-")
 
     fpath_mapping = {}
     fpath_mapping["fpath2uuid"] = {}
     fpath_mapping["uuid2fpath"] = {}
+    
+    # Create torrents for single-file 
     for fpath in enumerate_hf_repo(folder_base=repo):
         # folder = fpath.split("/")[0]
         # rel_path = "/".join(fpath.split("/")[1:])
@@ -85,8 +86,8 @@ def main(args):
         fpath_mapping["uuid2fpath"][f"{uuid}"] = rel_fpath
         # exit(0)
 
-    # from pprint import pprint
-    # pprint(fpath_mapping)
+    # Create torrents for folder
+    
 
     with open(
         osp.join(TORRENT_BASE_DIR, rel_rpath, "_hf_mirror_torrent.json"), "w"

@@ -20,6 +20,28 @@ def main(repo="bert-base-uncased"):
     fpath_mapping["fpath2uuid"] = {}
     fpath_mapping["uuid2fpath"] = {}
 
+    # Create torrent for folder
+    print("--" * 50)
+    git_hash = osp.basename(model_fpath)
+    '''
+    python py3createtorrent.py -t best5 \
+        $HOME/.cache/huggingface/hub/models--bert-base-uncased/snapshots/1dbc166cf8765166998eff31ade2eb64c8a40076  \
+        --output bert-base-uncased.torrent \
+        --name 1dbc166cf8765166998eff31ade2eb64c8a40076 --webseed https://huggingface.co/bert-base-uncased/resolve/
+    '''
+    torrent_path = osp.join(TORRENT_BASE_DIR, repo, f"_all.torrent")
+    os.makedirs(osp.dirname(torrent_path), exist_ok=True)
+    repo_name = FORMAT_NAME(repo)
+    cmd = f"python py3createtorrent.py -t best5 {model_fpath} \
+        --name '{git_hash}' \
+        --webseed https://huggingface.co/{repo}/resolve/ \
+        --webseed https://hf-mirror.com/{repo}/resolve/ \
+        --output {torrent_path} --force"
+    stdout, stderr = run_command(cmd)
+    print(stdout, stderr)
+    print(cmd)
+    print("--" * 50)
+    # Create torrent for single-file
     for fpath in enumerate_hf_repo(model_fpath):
         print("--" * 50)
         file_name = osp.relpath(fpath, model_fpath)
@@ -55,7 +77,10 @@ def main(repo="bert-base-uncased"):
         print(stdout, stderr)
         print(cmd)
         print("--" * 50)
-
+    
+    
+    
+    
     with open(osp.join(TORRENT_BASE_DIR, repo, "_hf_mirror_torrent.json"), "w") as fp:
         json.dump(fpath_mapping, fp, indent=2)
 

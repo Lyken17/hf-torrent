@@ -16,7 +16,16 @@ Find the commit history of specific file
 git log --format=format:%H <file>
 ```
 
-Create tensor 
+Create tensor (single file)
 ```
 python py3createtorrent.py -t best5 bert-base-uncased/model.safetensors --webseed https://huggingface.co/bert-base-uncased/resolve/main/model.safetensors
 ```
+
+Create tensor (folder)
+python py3createtorrent.py -t best5 \
+    $HOME/.cache/huggingface/hub/models--bert-base-uncased/snapshots/1dbc166cf8765166998eff31ade2eb64c8a40076  \
+    --output bert-base-uncased.torrent \
+    --name 1dbc166cf8765166998eff31ade2eb64c8a40076 --webseed https://huggingface.co/bert-base-uncased/resolve/
+
+
+https://hf-mirror.com/u/1dbc166cf8765166998eff31ade2eb64c8a40076/models/bert-base-uncased/d/README.md
