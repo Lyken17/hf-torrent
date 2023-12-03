@@ -1125,7 +1125,9 @@ def main() -> None:
 
     # Add the "created by" field.
     if not args.no_created_by:
-        metainfo["created by"] = "py3createtorrent v%s. Forked by hf-torrent." % __version__
+        metainfo["created by"] = (
+            "py3createtorrent v%s. Forked by hf-torrent." % __version__
+        )
 
     # Add user's comment or advertise py3createtorrent (unless this behaviour has been disabled by the user).
     # The user may also decide not to include the comment field at all by specifying an empty comment.
@@ -1149,7 +1151,7 @@ def main() -> None:
             )
 
         metainfo["info"]["name"] = args.name
-        
+
     # ###################################################
     # BENCODE METAINFO DICTIONARY AND WRITE TORRENT FILE:
     # - take into consideration the --output option

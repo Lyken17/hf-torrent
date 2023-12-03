@@ -42,8 +42,8 @@ def main(args):
     fpath_mapping = {}
     fpath_mapping["fpath2uuid"] = {}
     fpath_mapping["uuid2fpath"] = {}
-    
-    # Create torrents for single-file 
+
+    # Create torrents for single-file
     for fpath in enumerate_hf_repo(folder_base=repo):
         # folder = fpath.split("/")[0]
         # rel_path = "/".join(fpath.split("/")[1:])
@@ -87,7 +87,6 @@ def main(args):
         # exit(0)
 
     # Create torrents for folder
-    
 
     with open(
         osp.join(TORRENT_BASE_DIR, rel_rpath, "_hf_mirror_torrent.json"), "w"

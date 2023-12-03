@@ -89,14 +89,14 @@ while not gids.empty():
         gids.put(gid)
         count = (count + 1) % 10
         import time
+
         print(
             f"[{gid.progress_string()}] Waiting for {gid.bittorrent.info['name']} to finish downloading"
         )
         if count == 9:
             time.sleep(10)
             print("--" * 20, "Check backup in 10s", "--" * 20)
-            
-            
+
 
 print("All downloading finished")
 
