@@ -26,7 +26,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
 
         api = HfApi()
         git_hash = api.repo_info(repo_id=repo).sha
-        if fpath_mapping["lastest-commit"] == git_hash and not overwrite:
+        if "lastest-commit" in fpath_mapping and fpath_mapping["lastest-commit"] == git_hash and not overwrite:
             print(f"{repo} => {meta_info_fpath} already generated.")
             return
 
