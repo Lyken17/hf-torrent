@@ -140,8 +140,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
 
 if __name__ == "__main__":
     import argparse
-
     # parser = argparse.ArgumentParser(prog='HF Torrent Creator')
     # parser.add_argument('repo')       # positional argument
     # args = parser.parse_args()
-    main(overwrite=True)
+    main(overwrite=False)

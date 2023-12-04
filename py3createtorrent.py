@@ -934,6 +934,7 @@ def main() -> None:
     if best_shortcut_present:
         new_trackers = [
             # "http://1.15.21.149:8000/announce",
+            "http://tracker.hf-mirror.com/announce",
             config.default_tracker,
         ]
         for t in trackers:
