@@ -10,6 +10,9 @@ def download_fn(url, fpath):
     import tempfile
     from functools import partial
 
+    if osp.exists(fpath):
+        return fpath
+    
     cache_dir = osp.dirname(".cache")
     temp_file_manager = partial(  # type: ignore
         tempfile.NamedTemporaryFile, mode="wb", dir=cache_dir, delete=False

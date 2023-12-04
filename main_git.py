@@ -1,7 +1,7 @@
 import os, sys, os.path as osp
 import json
 
-from utils import run_command
+from hf_torrent.utils import run_command
 
 
 def enumerate_hf_repo(folder_base="bert-base-uncased"):

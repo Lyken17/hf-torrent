@@ -5,7 +5,7 @@ import json
 
 from huggingface_hub import snapshot_download, hf_hub_url, get_hf_file_metadata
 from huggingface_hub.hf_api import HfApi
-from utils import run_command, FORMAT_NAME, enumerate_hf_repo
+from hf_torrent.utils import run_command, FORMAT_NAME, enumerate_hf_repo
 
 
 REPO_BASE_DIR = "hf-repository"
@@ -26,7 +26,11 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
 
         api = HfApi()
         git_hash = api.repo_info(repo_id=repo).sha
-        if "lastest-commit" in fpath_mapping and fpath_mapping["lastest-commit"] == git_hash and not overwrite:
+        if (
+            "lastest-commit" in fpath_mapping
+            and fpath_mapping["lastest-commit"] == git_hash
+            and not overwrite
+        ):
             print(f"{repo} => {meta_info_fpath} already generated.")
             return
 
@@ -36,8 +40,8 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
     except Exception as e:
         print(e)
         print("Failed to download model. Skipping.")
-        return 
-        
+        return
+
     hf_cache_base = osp.dirname(osp.dirname(model_fpath))
 
     fpath_mapping = {}
@@ -120,8 +124,6 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
         print(cmd)
         print("--" * 50)
 
-    
-
     desired_timezone = pytz.timezone("Asia/Shanghai")
     fpath_mapping["lastest-generated"] = datetime.datetime.now(
         desired_timezone
@@ -140,6 +142,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
 
 if __name__ == "__main__":
     import argparse
+
     # parser = argparse.ArgumentParser(prog='HF Torrent Creator')
     # parser.add_argument('repo')       # positional argument
     # args = parser.parse_args()
