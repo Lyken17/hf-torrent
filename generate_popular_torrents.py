@@ -12,11 +12,16 @@ if __name__ == "__main__":
         main(repo=args.repo)
     else:
         import json, yaml
-
         with open("popular-models.yaml", "r") as f:
-            repos = yaml.load(f, Loader=yaml.FullLoader)["repos"]
+            yaml_info = yaml.load(f, Loader=yaml.FullLoader)
+            repos = yaml_info["repos"]
         with open("popular-repos-crawled.yaml", "r") as f:
-            repos += yaml.load(f, Loader=yaml.FullLoader)["repos"]
+            yaml_info = yaml.load(f, Loader=yaml.FullLoader)
+            for repo in yaml_info["repos"]:
+                if repo in yaml_info["_skipped"]:
+                    continue
+                repos.append(repo)
+            
         repos = list(set(repos))
         for repo in repos:
             print(repo)

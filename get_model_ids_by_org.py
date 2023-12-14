@@ -1,3 +1,4 @@
+import json, yaml
 import requests
 import os
 
@@ -18,6 +19,8 @@ for org in [
     "openai",
     "mistralai",
     "latent-consistency",
+    "liuhaotian",
+    "llava-hf",
 ]:
     response = requests.get(
         "https://huggingface.co/api/models",
@@ -25,24 +28,26 @@ for org in [
             "author": org,
             "sort": "likes",
             "direction": "-1",
-            "limit": "10",
+            "limit": "20",
             "full": "True",
             "config": "True",
         },
         headers={"Authorization": f"Bearer {api_token}"},
     )
 
-    import json, yaml
+    
 
     if response.status_code == 200:
         with open("popular-repos-crawled.yaml", "r") as f:
-            repos = yaml.load(f, Loader=yaml.FullLoader)["repos"]
+            yaml_info = yaml.load(f, Loader=yaml.FullLoader)
+        repos = yaml_info["repos"]
         models = response.json()
         for model in models:
             print(model["id"])
             repos.append(model["id"])
         repos = sorted(list(set(repos)))
+        yaml_info["repos"] = repos
         with open("popular-repos-crawled.yaml", "w") as f:
-            yaml.dump({"repos": repos}, f, default_flow_style=False)
+            yaml.dump(yaml_info, f, default_flow_style=False)
     else:
         print(f"Failed to retrieve models. Status code: {response.status_code}")
