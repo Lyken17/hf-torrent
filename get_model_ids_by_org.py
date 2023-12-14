@@ -35,8 +35,6 @@ for org in [
         headers={"Authorization": f"Bearer {api_token}"},
     )
 
-    
-
     if response.status_code == 200:
         with open("popular-repos-crawled.yaml", "r") as f:
             yaml_info = yaml.load(f, Loader=yaml.FullLoader)

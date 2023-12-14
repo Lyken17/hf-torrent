@@ -48,7 +48,9 @@ def main(
             repo_name,
             "_all_hf-mirror.torrent",
         )
-        torrent_path = osp.realpath(FORMAT_NAME(repo_name) + f"-{meta['lastest-commit']}" + ".torrent")
+        torrent_path = osp.realpath(
+            FORMAT_NAME(repo_name) + f"-{meta['lastest-commit']}" + ".torrent"
+        )
         return download_fn(meta_fpath, torrent_path)
 
     # initialization, these are the default values
