@@ -25,8 +25,8 @@ def download_fn(url, fpath):
     return fpath
 
 
-def FORMAT_NAME(s):
-    return s.replace("-", "_").replace("/", "-")
+# def FORMAT_NAME(s):
+#     return s.replace("-", "_").replace("/", "-")
 
 
 def enumerate_hf_repo(folder_base="bert-base-uncased"):

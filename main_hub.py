@@ -157,7 +157,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
     )
     fpath_mapping["lastest-commit"] = git_hash
 
-    with open(osp.join(TORRENT_BASE_DIR, repo, "_hf_mirror_torrent.json"), "w") as fp:
+    with open(osp.join(TORRENT_BASE_DIR, repo, "_hf_torrent.json"), "w") as fp:
         json.dump(fpath_mapping, fp, indent=2)
 
     if delete_existing:
