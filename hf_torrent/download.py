@@ -5,7 +5,7 @@ import json
 import argparse
 
 import aria2p
-from hf_torrent.utils import enumerate_hf_repo, download_fn, FORMAT_NAME
+from hf_torrent.utils import enumerate_hf_repo, download_fn, FORMAT_NAME, convert_repo_name
 
 
 def main(
@@ -49,7 +49,7 @@ def main(
             "_all.torrent",
         )
         torrent_path = osp.realpath(
-            FORMAT_NAME(repo_name) + f"-{meta['lastest-commit']}" + ".torrent"
+            convert_repo_name(repo_name) + f"-{meta['lastest-commit'][:7]}" + ".torrent"
         )
         return download_fn(meta_fpath, torrent_path)
 

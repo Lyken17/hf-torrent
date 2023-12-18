@@ -18,15 +18,31 @@ def download_fn(url, fpath):
         tempfile.NamedTemporaryFile, mode="wb", dir=cache_dir, delete=False
     )
 
-    with temp_file_manager() as temp_file:
-        http_get(url, temp_file)
+    # with temp_file_manager() as temp_file:
+    #     http_get(url, temp_file)
     os.makedirs(osp.dirname(fpath), exist_ok=True)
-    _chmod_and_replace(temp_file.name, fpath)
+    # _chmod_and_replace(temp_file.name, fpath)
+    http_get(url, open(fpath, "wb"))
     return fpath
 
 
-# def FORMAT_NAME(s):
-#     return s.replace("-", "_").replace("/", "-")
+def FORMAT_NAME(s):
+    return s.replace("-", "_").replace("/", "-")
+
+
+def convert_repo_name(repo):
+    if "/" in repo:
+        args = repo.split("/")
+        if len(args) == 2:
+            org, name = args
+            return f"models--{org}--{name}"
+        elif len(args) == 3:
+            rtype, org, name = args
+            return f"{rtype}--{org}--{name}"
+        else:
+            raise NotImplementedError
+    else:
+        return f"models--{repo}"
 
 
 def enumerate_hf_repo(folder_base="bert-base-uncased"):
