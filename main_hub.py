@@ -2,6 +2,7 @@ import datetime
 import pytz
 import os, sys, os.path as osp
 import json
+import shutil
 
 from huggingface_hub import snapshot_download, hf_hub_url, get_hf_file_metadata
 from huggingface_hub.hf_api import HfApi
@@ -10,10 +11,30 @@ from hf_torrent.utils import run_command, FORMAT_NAME, enumerate_hf_repo
 
 REPO_BASE_DIR = "hf-repository"
 TORRENT_BASE_DIR = "hf-torrent-store"
-FORMAT_NAME = lambda s: s.replace("-", "_").replace("/", "-")
-
+# FORMAT_NAME = lambda s: s.replace("-", "_").replace("/", "-")
+FORMAT_NAME = lambda s: s.replace("/", "--")
+def convert_repo_name(repo):
+    if "/" in repo:
+        args = repo.split("/")
+        if len(args) == 2:
+            org, name = args
+            return f"models--{org}--{name}"
+        elif len(args) == 3:
+            rtype, org, name = args
+            return f"{rtype}--{org}--{name}"
+        else:
+            raise NotImplementedError
+    else:
+        return f"models--{repo}"
 
 def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
+    # ==================== Handle for model / dataset ====================
+    repo_type = "model"
+    _repo = repo
+    if repo.startswith("datasets"):
+        _repo = repo.replace("datasets/", "")
+        repo_type = "dataset"
+        
     # ==================== Check whether generated ====================
     meta_info_fpath = osp.join(TORRENT_BASE_DIR, repo, "_hf_mirror_torrent.json")
     print(meta_info_fpath)
@@ -25,7 +46,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
             fpath_mapping = json.load(fp)
 
         api = HfApi()
-        git_hash = api.repo_info(repo_id=repo).sha
+        git_hash = api.repo_info(repo_id=_repo, repo_type=repo_type).sha
         if (
             "lastest-commit" in fpath_mapping
             and fpath_mapping["lastest-commit"] == git_hash
@@ -36,22 +57,19 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
 
     # ==================== Download model ====================
     try:
-        model_fpath = snapshot_download(repo)
+        model_fpath = snapshot_download(_repo, repo_type=repo_type)
     except Exception as e:
         print(e)
         print("Failed to download model. Skipping.")
         return
 
     hf_cache_base = osp.dirname(osp.dirname(model_fpath))
-
-    fpath_mapping = {}
-    fpath_mapping["fpath2uuid"] = {}
-    fpath_mapping["uuid2fpath"] = {}
-
-    # Create torrent for folder
-    print("--" * 50)
     git_hash = osp.basename(model_fpath)
-    torrent_path = osp.join(TORRENT_BASE_DIR, repo, f"_all.torrent")
+
+    # ==================== Create torrent for folder (raw naming) ====================
+    print("--" * 50)
+    print("Generating a single torrent for whole repo. This may take a while")
+    torrent_path = osp.join(TORRENT_BASE_DIR, repo, f"_all_raw_hash.torrent")
     os.makedirs(osp.dirname(torrent_path), exist_ok=True)
     repo_name = FORMAT_NAME(repo)
     cmd = f"python py3createtorrent.py -t best5 {model_fpath} \
@@ -64,45 +82,48 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
     print(cmd)
     print("--" * 50)
 
-    # Create torrent for folder (hf-mirror only, but the naming is more reable.)
+    # ==================== Create torrent for folder (improved naming, but requires WS redirect) ====================
     print("--" * 50)
+    print("Generating a single torrent for whole repo with improved naming. This may take a while")
     git_hash = osp.basename(model_fpath)
-    torrent_path = osp.join(TORRENT_BASE_DIR, repo, f"_all_hf-mirror.torrent")
+    torrent_path = osp.join(TORRENT_BASE_DIR, repo, f"_all.torrent")
     os.makedirs(osp.dirname(torrent_path), exist_ok=True)
 
-    def convert_repo_name(repo):
-        if "/" in repo:
-            org, name = repo.split("/")
-            return f"{org}--{name}"
-        else:
-            return repo
-
-    repo_folder = f"models--{convert_repo_name(repo)}--{git_hash[:7]}"  # 7 digits to follow HF conventional length.
+    # main digits
+    repo_folder = f"{convert_repo_name(repo)}--{git_hash[:7]}"  # 7 digits to follow HF conventional length.
+    
+    # https://ws.hf-mirror.com/ is reverse proxy to https://huggingface.co/
+    # https://r2hf.pyonpyon.today/ is reverse proxy to https://huggingface.co/
     cmd = f"python py3createtorrent.py -t best5 {model_fpath} \
         --name '{repo_folder}' \
-        --webseed https://hf-mirror.com/ws \
+        --webseed https://ws.hf-mirror.com/ \
+        --webseed https://r2hf.pyonpyon.today/ \
         --output {torrent_path} --force"
     stdout, stderr = run_command(cmd)
     print(stdout, stderr)
     print(cmd)
     print("--" * 50)
-
-    # Create torrents for single-file
+    
+    # ==================== Create torrents for single-file ====================
+    fpath_mapping = {}
+    fpath_mapping["fpath2uuid"] = {}
+    fpath_mapping["uuid2fpath"] = {}
     for fpath in enumerate_hf_repo(model_fpath):
         print("--" * 50)
         file_name = osp.relpath(fpath, model_fpath)
         etag_hash = osp.basename(osp.realpath(fpath))
-        repo_name = FORMAT_NAME(repo)
-        torrent_name = FORMAT_NAME(file_name)
+        # repo_name = FORMAT_NAME(repo)
+        # torrent_name = FORMAT_NAME(file_name)
 
-        print(repo_name, "\t", torrent_name, "\t", etag_hash)
-
-        uuid = f"{repo_name}-{torrent_name}-{etag_hash}"
+        print(repo_name, "\t", file_name, "\t", etag_hash)
+        uuid = f"{convert_repo_name(repo)}-{file_name}--{etag_hash}"
 
         torrent_path = osp.join(TORRENT_BASE_DIR, repo, f"{uuid}.torrent")
         os.makedirs(osp.dirname(torrent_path), exist_ok=True)
 
-        hf_meta = get_hf_file_metadata(hf_hub_url(repo_id=repo, filename=file_name))
+        print(repo, repo_type)
+        hf_url = hf_hub_url(repo_id=_repo, filename=file_name, repo_type=repo_type)
+        hf_meta = get_hf_file_metadata(hf_url)
         commit_hash = hf_meta.commit_hash
 
         rel_fpath = osp.relpath(fpath, model_fpath)
@@ -113,7 +134,6 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
         #     print(f"Skipping {torrent_path} as it already exists.")
         #     print("--" * 50)
         #     continue
-
         cmd = f"python py3createtorrent.py -t best5 {fpath} \
                 --name '{uuid}' \
                 --webseed https://huggingface.co/{repo}/resolve/{commit_hash}/{file_name} \
@@ -123,27 +143,33 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
         print(stdout, stderr)
         print(cmd)
         print("--" * 50)
-
+    
+    # ==================== Logging meta information ====================
     desired_timezone = pytz.timezone("Asia/Shanghai")
     fpath_mapping["lastest-generated"] = datetime.datetime.now(
         desired_timezone
-    ).strftime("%Y-%m-%d %H:%M:%S")
+    ).strftime("%Y-%m-%d %H:%M:%S") + " (Asia/Shanghai)"
     fpath_mapping["lastest-commit"] = git_hash
 
     with open(osp.join(TORRENT_BASE_DIR, repo, "_hf_mirror_torrent.json"), "w") as fp:
         json.dump(fpath_mapping, fp, indent=2)
 
     if delete_existing:
-        import shutil
-
         print("Removing cache: ", hf_cache_base)
         shutil.rmtree(hf_cache_base)
 
 
 if __name__ == "__main__":
     import argparse
-
     # parser = argparse.ArgumentParser(prog='HF Torrent Creator')
     # parser.add_argument('repo')       # positional argument
     # args = parser.parse_args()
-    main(overwrite=False)
+    main(
+        repo="datasets/Lin-Chen/ShareGPT4V",
+        overwrite=True, # dev purpose
+    ) 
+    
+    main(
+        repo="runwayml/stable-diffusion-v1-5",
+        overwrite=True, # dev purpose
+    ) 

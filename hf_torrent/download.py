@@ -37,7 +37,7 @@ def main(
     meta_fpath = osp.join(
         BASE_FOLDER,
         repo_name,
-        "_hf_mirror_torrent.json",
+        "_hf_torrent.json",
     )
     meta = json.load(open(load_remote_or_local_file(meta_fpath), "r"))
 
@@ -46,7 +46,7 @@ def main(
         meta_fpath = osp.join(
             BASE_FOLDER,
             repo_name,
-            "_all_hf-mirror.torrent",
+            "_all.torrent",
         )
         torrent_path = osp.realpath(
             FORMAT_NAME(repo_name) + f"-{meta['lastest-commit']}" + ".torrent"

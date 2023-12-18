@@ -19,11 +19,13 @@ if __name__ == "__main__":
         with open("popular-repos-crawled.yaml", "r") as f:
             yaml_info = yaml.load(f, Loader=yaml.FullLoader)
             for repo in yaml_info["repos"]:
-                if repo in yaml_info["_skipped"]:
-                    continue
+                # if repo in yaml_info["_skipped"]:
+                #     continue
                 repos.append(repo)
 
         repos = list(set(repos))
         for repo in repos:
+            if repo in yaml_info["_skipped"]:
+                continue
             print(repo)
             main(repo=repo, delete_existing=True)
