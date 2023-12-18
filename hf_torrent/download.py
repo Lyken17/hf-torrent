@@ -7,6 +7,16 @@ import argparse
 import aria2p
 from hf_torrent.utils import enumerate_hf_repo, download_fn, FORMAT_NAME, convert_repo_name
 
+def load_remote_or_local_file(fpath, cache_dir="~/.cache/temp"):
+    if fpath.startswith("http://") or fpath.startswith("https://"):
+        return download_fn(
+            fpath,
+            osp.join(
+                osp.expanduser(cache_dir),
+                fpath.replace("https://", "").replace("http://", ""),
+            ),
+        )
+    return fpath
 
 def main(
     repo,
@@ -14,25 +24,14 @@ def main(
     download,
     get_torrent=False,
     BASE_FOLDER="https://raw.githubusercontent.com/Lyken17/hf-torrent-store/master",
-    HF_FOLDER="hf-torrent-downloads",
-    HF_MODELS="hf-models",
+    # HF_FOLDER="hf-torrent-downloads",
+    # HF_MODELS="hf-models",
 ):
     repo_name = repo
     repo_folder = osp.join(BASE_FOLDER, repo_name)
 
     HF_MODELS = osp.realpath(osp.expanduser(hf_models))
     HF_FOLDER = osp.realpath(osp.expanduser(download))
-
-    def load_remote_or_local_file(fpath, cache_dir="~/.cache/temp"):
-        if fpath.startswith("http://") or fpath.startswith("https://"):
-            return download_fn(
-                fpath,
-                osp.join(
-                    osp.expanduser(cache_dir),
-                    fpath.replace("https://", "").replace("http://", ""),
-                ),
-            )
-        return fpath
 
     meta_fpath = osp.join(
         BASE_FOLDER,
@@ -128,8 +127,7 @@ def main(
         model = AutoModelForCausalLM.from_pretrained("{osp.join(HF_MODELS, repo_name)}")
         
     Note this assumes you are running LLMs. Change to other AutoClass when necessary.
-    """
-    )
+    """)
 
 
 if __name__ == "__main__":
