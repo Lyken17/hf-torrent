@@ -13,6 +13,8 @@ REPO_BASE_DIR = "hf-repository"
 TORRENT_BASE_DIR = "hf-torrent-store"
 # FORMAT_NAME = lambda s: s.replace("-", "_").replace("/", "-")
 FORMAT_NAME = lambda s: s.replace("/", "--")
+
+
 def convert_repo_name(repo):
     if "/" in repo:
         args = repo.split("/")
@@ -27,16 +29,17 @@ def convert_repo_name(repo):
     else:
         return f"models--{repo}"
 
+
 def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
-    # ==================== Handle for model / dataset ====================
+    # ==================== Handling model / dataset ====================
     repo_type = "model"
     _repo = repo
     if repo.startswith("datasets"):
         _repo = repo.replace("datasets/", "")
         repo_type = "dataset"
-        
+
     # ==================== Check whether generated ====================
-    meta_info_fpath = osp.join(TORRENT_BASE_DIR, repo, "_hf_mirror_torrent.json")
+    meta_info_fpath = osp.join(TORRENT_BASE_DIR, repo, "_hf_torrent.json")
     print(meta_info_fpath)
     if osp.exists(meta_info_fpath):
         print(
@@ -84,14 +87,16 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
 
     # ==================== Create torrent for folder (improved naming, but requires WS redirect) ====================
     print("--" * 50)
-    print("Generating a single torrent for whole repo with improved naming. This may take a while")
+    print(
+        "Generating a single torrent for whole repo with improved naming. This may take a while"
+    )
     git_hash = osp.basename(model_fpath)
     torrent_path = osp.join(TORRENT_BASE_DIR, repo, f"_all.torrent")
     os.makedirs(osp.dirname(torrent_path), exist_ok=True)
 
     # main digits
     repo_folder = f"{convert_repo_name(repo)}--{git_hash[:7]}"  # 7 digits to follow HF conventional length.
-    
+
     # https://ws.hf-mirror.com/ is reverse proxy to https://huggingface.co/
     # https://r2hf.pyonpyon.today/ is reverse proxy to https://huggingface.co/
     cmd = f"python py3createtorrent.py -t best5 {model_fpath} \
@@ -103,7 +108,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
     print(stdout, stderr)
     print(cmd)
     print("--" * 50)
-    
+
     # ==================== Create torrents for single-file ====================
     fpath_mapping = {}
     fpath_mapping["fpath2uuid"] = {}
@@ -121,7 +126,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
         torrent_path = osp.join(TORRENT_BASE_DIR, repo, f"{uuid}.torrent")
         os.makedirs(osp.dirname(torrent_path), exist_ok=True)
 
-        print(repo, repo_type)
+        # print(repo, repo_type)
         hf_url = hf_hub_url(repo_id=_repo, filename=file_name, repo_type=repo_type)
         hf_meta = get_hf_file_metadata(hf_url)
         commit_hash = hf_meta.commit_hash
@@ -143,12 +148,13 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
         print(stdout, stderr)
         print(cmd)
         print("--" * 50)
-    
+
     # ==================== Logging meta information ====================
     desired_timezone = pytz.timezone("Asia/Shanghai")
-    fpath_mapping["lastest-generated"] = datetime.datetime.now(
-        desired_timezone
-    ).strftime("%Y-%m-%d %H:%M:%S") + " (Asia/Shanghai)"
+    fpath_mapping["lastest-generated"] = (
+        datetime.datetime.now(desired_timezone).strftime("%Y-%m-%d %H:%M:%S")
+        + " (Asia/Shanghai)"
+    )
     fpath_mapping["lastest-commit"] = git_hash
 
     with open(osp.join(TORRENT_BASE_DIR, repo, "_hf_mirror_torrent.json"), "w") as fp:
@@ -161,15 +167,16 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
 
 if __name__ == "__main__":
     import argparse
+
     # parser = argparse.ArgumentParser(prog='HF Torrent Creator')
     # parser.add_argument('repo')       # positional argument
     # args = parser.parse_args()
     main(
         repo="datasets/Lin-Chen/ShareGPT4V",
-        overwrite=True, # dev purpose
-    ) 
-    
+        overwrite=True,  # dev purpose
+    )
+
     main(
         repo="runwayml/stable-diffusion-v1-5",
-        overwrite=True, # dev purpose
-    ) 
+        overwrite=True,  # dev purpose
+    )

@@ -1,0 +1,5 @@
+repos:
+  - "bert-base-uncased"
+  - "gpt2"
+  - "microsoft/resnet-50"
+  - "facebook/opt-125m"

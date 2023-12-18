@@ -1,7 +1,4 @@
-_skipped:
-- liuhaotian/LLaVA-Lightning-MPT-7B-preview
-- liuhaotian/llava-llama-2-13b-chat-lightning-preview
-- openchat/openchat_v2_openorca_preview
+
 repos:
 - Intel/ColBERT-NQ
 - Intel/distilbert-base-uncased-finetuned-sst-2-english-int8-static

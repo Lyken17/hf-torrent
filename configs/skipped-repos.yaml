@@ -1,0 +1,4 @@
+repo:
+- liuhaotian/LLaVA-Lightning-MPT-7B-preview
+- liuhaotian/llava-llama-2-13b-chat-lightning-preview
+- openchat/openchat_v2_openorca_preview
