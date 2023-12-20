@@ -102,6 +102,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
         --name '{repo_folder}' \
         --webseed https://ws.hf-mirror.com/ \
         --webseed https://r2hf.pyonpyon.today/ \
+        --webseed https://ws.hf-torrent.lzhu.me/ \
         --output {torrent_path} --force"
     stdout, stderr = run_command(cmd)
     print(stdout, stderr)
@@ -176,6 +177,6 @@ if __name__ == "__main__":
     # )
 
     main(
-        repo="licyk/controlnet_v1.1_annotator",
+        repo="facebook/opt-125m",
         overwrite=True,  # dev purpose
     )
