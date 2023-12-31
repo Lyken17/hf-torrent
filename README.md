@@ -4,41 +4,49 @@ This repository contains an experimental torrent-style download for model weight
 
 The core implementation is `main_hub.py`, which downloads files from Hugging Face and converts them into seedable torrents.
 
-## Installation
-
-To install, run the following command:
-
-`pip install -r requirements.txt`
-
 ## How to use
 
-Before using HF-Torrent, make sure you have [aria2c](https://aria2.github.io/) installed. Then, in a separate terminal, run the following command:
+`pip install hf-torrent`
+
+Before launching downloads, make sure you have [aria2c](https://aria2.github.io/) installed and 
+
+<details>
+<summary>  run the following command in a separate terminal </summary>
 
 ```bash
 aria2c --enable-rpc --rpc-listen-all \
     --max-upload-limit=4M \
     --optimize-concurrent-downloads=true \
     --bt-detach-seed-only=true \
-    --seed-ratio=10.0  \
-    --daemon # remove this if you want to observe the logs.
-
+    --seed-ratio=10.0  
 ```
+</details>
 
-Next, install the `aria2p[tui]` package by running:
+
+Then you can start using HF-Torrent with the following command:
 
 ```bash
-pip install "aria2p[tui]"
-
+hf-torrent <your target repo>
 ```
 
-Once installed, you can start using HF-Torrent with the following command:
+[![asciicast](https://asciinema.org/a/4ppEU7HDGzUqwReSIosXOkCs9.svg)](https://asciinema.org/a/4ppEU7HDGzUqwReSIosXOkCs9)
+
+
+Or if you have your preferred torrent clients, you can pull the torrent file only
 
 ```bash
-python download.py <your target repo>
-
+hf-torrent --get-torrent <your target repo>
 ```
+
 
 ## How to contribute
+
+### Installation
+
+To install, run the following command:
+
+`pip install -r requirements.txt`
+
 
 ### Seeding
 

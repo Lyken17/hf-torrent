@@ -8,7 +8,7 @@ import requests
 import aria2p
 from hf_torrent.utils import enumerate_hf_repo, download_fn, FORMAT_NAME, convert_repo_name
 
-def load_remote_or_local_file(fpath, cache_dir="~/.cache/hf-torrent-meta"):
+def load_remote_or_local_file(fpath, cache_dir="~/.cache/hf-torrent-downloads"):
     target_path = osp.join(
         osp.expanduser(cache_dir),
         fpath.replace("https://", "").replace("http://", ""),
