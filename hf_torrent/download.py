@@ -20,18 +20,16 @@ def load_remote_or_local_file(fpath, cache_dir="~/.cache/temp"):
 
 def main(
     repo,
-    hf_models,
-    download,
+    download_folder,
+    symlink_folder,
     get_torrent=False,
     BASE_FOLDER="https://raw.githubusercontent.com/Lyken17/hf-torrent-store/master",
-    # HF_FOLDER="hf-torrent-downloads",
-    # HF_MODELS="hf-models",
 ):
     repo_name = repo
     repo_folder = osp.join(BASE_FOLDER, repo_name)
 
-    HF_MODELS = osp.realpath(osp.expanduser(hf_models))
-    HF_FOLDER = osp.realpath(osp.expanduser(download))
+    HF_MODELS = osp.realpath(osp.expanduser(download_folder))
+    HF_FOLDER = osp.realpath(osp.expanduser(symlink_folder))
 
     meta_fpath = osp.join(
         BASE_FOLDER,
@@ -41,7 +39,7 @@ def main(
     meta = json.load(open(load_remote_or_local_file(meta_fpath), "r"))
 
     if get_torrent:
-        print("Downloading torrent files")
+        print("Downloading torrent files only. You will need to download the via torrent client such as https://www.qbittorrent.org/.")
         meta_fpath = osp.join(
             BASE_FOLDER,
             repo_name,
@@ -52,6 +50,7 @@ def main(
         )
         return download_fn(meta_fpath, torrent_path)
 
+    # TODO: add security check 
     # initialization, these are the default values
     aria2 = aria2p.API(aria2p.Client(host="http://localhost", port=6800, secret=""))
 
@@ -106,7 +105,7 @@ def main(
             )
             if count == 9:
                 time.sleep(5)
-                print("--" * 20, "Check backup in 5s", "--" * 20)
+                print("--" * 20, "Check again in 5 seconds", "--" * 20)
 
     print("All downloading finished. Now link files to hf-models folder")
     # Create sym-links
@@ -115,7 +114,7 @@ def main(
         hf_models_fpath = osp.join(HF_MODELS, repo_name, fpath)
         os.makedirs(osp.dirname(hf_models_fpath), exist_ok=True)
         if osp.exists(hf_models_fpath) or osp.islink(hf_models_fpath):
-            # Override to ensure the link is correct
+            # Override to ensure the symlink is correct
             os.remove(hf_models_fpath)
         os.symlink(osp.realpath(hf_weights_path), osp.realpath(hf_models_fpath))
         # print(f"Linking {hf_weights_path} ==> {hf_models_fpath}")

@@ -29,7 +29,7 @@ setup(
     author="Ligeng Zhu",
     author_email="lykensyu+github@gmail.com",
     url="https://github.com/Lyken17/hf-torrent/",
-    description="Let your program echo to you~",
+    description="A tool to download HuggingFace models via BitTorrent.",
     long_description=readme,
     long_description_content_type="text/markdown",
     license="MIT",

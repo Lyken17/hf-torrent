@@ -1,3 +1,11 @@
+## Cleanup scripts
+```
+find . -name *.json -type f -delete
+find . -name *.torrent -type f -delete
+HF_CACHE=$HOME/.cache/hf-torrent python generate_popular_torrents.py
+```
+
+
 ## HF folder structure
 The new cache file layout looks like this:
 - The cache directory contains one subfolder per repo_id (namespaced by repo type)

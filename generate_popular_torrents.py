@@ -30,7 +30,8 @@ if __name__ == "__main__":
         with open("configs/skipped-repos.yaml", "r") as f:
             yaml_info = yaml.load(f, Loader=yaml.FullLoader)
 
-        repos = list(set(repos))
+        repos = sorted(list(set(repos)))
+        
         for repo in repos:
             if repo in yaml_info["repo"]:
                 continue
