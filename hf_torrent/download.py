@@ -4,18 +4,25 @@ import subprocess
 import json
 import argparse
 
+import requests
 import aria2p
 from hf_torrent.utils import enumerate_hf_repo, download_fn, FORMAT_NAME, convert_repo_name
 
-def load_remote_or_local_file(fpath, cache_dir="~/.cache/temp"):
+def load_remote_or_local_file(fpath, cache_dir="~/.cache/hf-torrent-meta"):
+    target_path = osp.join(
+        osp.expanduser(cache_dir),
+        fpath.replace("https://", "").replace("http://", ""),
+    )
     if fpath.startswith("http://") or fpath.startswith("https://"):
-        return download_fn(
-            fpath,
-            osp.join(
-                osp.expanduser(cache_dir),
-                fpath.replace("https://", "").replace("http://", ""),
-            ),
-        )
+        try:
+            return download_fn(
+                fpath,
+                target_path,
+            )
+        except requests.exceptions.ConnectionError:
+            os.remove(target_path)
+            raise FileNotFoundError(f"failed to download {fpath}")
+            
     return fpath
 
 def main(
@@ -23,7 +30,8 @@ def main(
     download_folder,
     symlink_folder,
     get_torrent=False,
-    BASE_FOLDER="https://raw.githubusercontent.com/Lyken17/hf-torrent-store/master",
+    # BASE_FOLDER="https://raw.githubusercontent.com/Lyken17/hf-torrent-store/master",
+    BASE_FOLDER="https://gitee.com/ligeng-zhu/hf-torrent-store/raw/master",
 ):
     repo_name = repo
     repo_folder = osp.join(BASE_FOLDER, repo_name)
