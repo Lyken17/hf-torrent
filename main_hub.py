@@ -14,6 +14,7 @@ TORRENT_BASE_DIR = "hf-torrent-store"
 # FORMAT_NAME = lambda s: s.replace("-", "_").replace("/", "-")
 FORMAT_NAME = lambda s: s.replace("/", "--")
 
+TORRENT_SCRIPT = "py3create.py"
 
 def convert_repo_name(repo):
     if "/" in repo:
@@ -61,6 +62,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
             if "lastest-commit" in fpath_mapping:
                 latest_commit = fpath_mapping['lastest-commit']
             print(f"Current commit {latest_commit} != remote commit {git_hash} ")
+            print(fpath_mapping["lastest-commit"] == git_hash)
 
     # ==================== Download model ====================
     try:
@@ -79,7 +81,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
     torrent_path = osp.join(TORRENT_BASE_DIR, repo, f"_all_raw_hash.torrent")
     os.makedirs(osp.dirname(torrent_path), exist_ok=True)
     repo_name = FORMAT_NAME(repo)
-    cmd = f"python py3createtorrent.py -t best5 {model_fpath} \
+    cmd = f"python {TORRENT_SCRIPT} -t best5 {model_fpath} \
         --name '{git_hash}' \
         --webseed https://huggingface.co/{repo}/resolve/ \
         --webseed https://hf-mirror.com/{repo}/resolve/ \
@@ -103,7 +105,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
 
     # https://ws.hf-mirror.com/ is reverse proxy to https://huggingface.co/
     # https://r2hf.pyonpyon.today/ is reverse proxy to https://huggingface.co/
-    cmd = f"python py3createtorrent.py -t best5 {model_fpath} \
+    cmd = f"python {TORRENT_SCRIPT} -t best5 {model_fpath} \
         --name '{repo_folder}' \
         --webseed https://ws.hf-mirror.com/ \
         --webseed https://r2hf.pyonpyon.today/ \
@@ -144,7 +146,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
         #     print(f"Skipping {torrent_path} as it already exists.")
         #     print("--" * 50)
         #     continue
-        cmd = f"python py3createtorrent.py -t best5 {fpath} \
+        cmd = f"python {TORRENT_SCRIPT} -t best5 {fpath} \
                 --name '{uuid}' \
                 --webseed https://huggingface.co/{repo}/resolve/{commit_hash}/{file_name} \
                 --webseed https://hf-mirror.com/{repo}/resolve/{commit_hash}/{file_name} \
@@ -183,5 +185,5 @@ if __name__ == "__main__":
 
     main(
         repo="facebook/opt-125m",
-        overwrite=True,  # dev purpose
+        overwrite=False,  # dev purpose
     )
