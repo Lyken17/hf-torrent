@@ -7,7 +7,7 @@ import shutil
 from huggingface_hub import snapshot_download, hf_hub_url, get_hf_file_metadata
 from huggingface_hub.hf_api import HfApi
 from hf_torrent.utils import run_command, FORMAT_NAME, enumerate_hf_repo
-
+from huggingface_hub.utils._errors import RepositoryNotFoundError
 
 REPO_BASE_DIR = "hf-repository"
 TORRENT_BASE_DIR = "hf-torrent-store"
@@ -48,8 +48,14 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
         with open(meta_info_fpath, "r") as fp:
             fpath_mapping = json.load(fp)
 
-        api = HfApi()
-        git_hash = api.repo_info(repo_id=_repo, repo_type=repo_type).sha
+        try:
+            api = HfApi()
+            git_hash = api.repo_info(repo_id=_repo, repo_type=repo_type).sha
+        except RepositoryNotFoundError:
+            print(e)
+            print("The repository is no longer valid. Please delete")
+            return 
+                
         if (
             "lastest-commit" in fpath_mapping
             and fpath_mapping["lastest-commit"] == git_hash
