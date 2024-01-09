@@ -51,7 +51,7 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
         try:
             api = HfApi()
             git_hash = api.repo_info(repo_id=_repo, repo_type=repo_type).sha
-        except RepositoryNotFoundError:
+        except RepositoryNotFoundError as e:
             print(e)
             print("The repository is no longer valid. Please delete")
             return 
