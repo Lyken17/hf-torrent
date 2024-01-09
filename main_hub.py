@@ -56,6 +56,11 @@ def main(repo="bert-base-uncased", delete_existing=False, overwrite=False):
         ):
             print(f"{repo} => {meta_info_fpath} already generated.")
             return
+        else:
+            latest_commit = None
+            if "lastest-commit" in fpath_mapping:
+                latest_commit = fpath_mapping['lastest-commit']
+            print(f"Current commit {latest_commit} != remote commit {git_hash} ")
 
     # ==================== Download model ====================
     try:
