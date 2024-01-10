@@ -36,7 +36,7 @@ for org in [
     )
 
     if response.status_code == 200:
-        with open("popular-repos-crawled.yaml", "r") as f:
+        with open("configs/popular-repos-crawled.yaml", "r") as f:
             yaml_info = yaml.load(f, Loader=yaml.FullLoader)
         repos = yaml_info["repos"]
         models = response.json()
@@ -45,7 +45,7 @@ for org in [
             repos.append(model["id"])
         repos = sorted(list(set(repos)))
         yaml_info["repos"] = repos
-        with open("popular-repos-crawled.yaml", "w") as f:
+        with open("configs/popular-repos-crawled.yaml", "w") as f:
             yaml.dump(yaml_info, f, default_flow_style=False)
     else:
         print(f"Failed to retrieve models. Status code: {response.status_code}")
