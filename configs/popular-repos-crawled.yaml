@@ -1,13 +1,15 @@
-
 repos:
 - Intel/ColBERT-NQ
 - Intel/distilbert-base-uncased-finetuned-sst-2-english-int8-static
 - Intel/dpt-hybrid-midas
 - Intel/dpt-large
 - Intel/dpt-large-ade
+- Intel/dpt-swinv2-tiny-256
 - Intel/dynamic_tinybert
 - Intel/gpt-j-6B-int8-dynamic
+- Intel/gpt-j-6B-int8-dynamic-inc
 - Intel/gpt-j-6B-int8-static
+- Intel/gpt-j-6B-int8-static-inc
 - Intel/ldm3d
 - Intel/ldm3d-4c
 - Intel/ldm3d-pano
@@ -18,8 +20,11 @@ repos:
 - Intel/neural-chat-7b-v3-3
 - Intel/neural-chat-7b-v3-3-Slerp
 - Intel/whisper-base-onnx-int4
+- Intel/whisper-base-onnx-int4-inc
 - Intel/whisper-large-v2-onnx-int4
+- Intel/whisper-large-v2-onnx-int4-inc
 - Intel/whisper-tiny-onnx-int4
+- Intel/whisper-tiny-onnx-int4-inc
 - Qwen/Qwen-14B
 - Qwen/Qwen-14B-Chat
 - Qwen/Qwen-14B-Chat-Int4
@@ -40,6 +45,10 @@ repos:
 - Qwen/Qwen-VL
 - Qwen/Qwen-VL-Chat
 - Qwen/Qwen-VL-Chat-Int4
+- Qwen/Qwen1.5-0.5B
+- Qwen/Qwen1.5-14B-Chat
+- Qwen/Qwen1.5-72B-Chat
+- Qwen/Qwen1.5-7B-Chat
 - THUDM/CogVLM
 - THUDM/WebGLM
 - THUDM/agentlm-70b
@@ -57,6 +66,7 @@ repos:
 - THUDM/chatglm3-6b-base
 - THUDM/codegeex2-6b
 - THUDM/codegeex2-6b-int4
+- THUDM/cogagent-chat-hf
 - THUDM/cogvlm-chat-hf
 - THUDM/glm-10b-chinese
 - THUDM/visualglm-6b
@@ -67,10 +77,17 @@ repos:
 - deepseek-ai/deepseek-coder-5.7bmqa-base
 - deepseek-ai/deepseek-coder-6.7b-base
 - deepseek-ai/deepseek-coder-6.7b-instruct
+- deepseek-ai/deepseek-coder-7b-base-v1.5
+- deepseek-ai/deepseek-coder-7b-instruct-v1.5
 - deepseek-ai/deepseek-llm-67b-base
 - deepseek-ai/deepseek-llm-67b-chat
 - deepseek-ai/deepseek-llm-7b-base
 - deepseek-ai/deepseek-llm-7b-chat
+- deepseek-ai/deepseek-math-7b-base
+- deepseek-ai/deepseek-math-7b-instruct
+- deepseek-ai/deepseek-math-7b-rl
+- deepseek-ai/deepseek-moe-16b-base
+- deepseek-ai/deepseek-moe-16b-chat
 - facebook/bart-large
 - facebook/bart-large-cnn
 - facebook/bart-large-mnli
@@ -80,6 +97,7 @@ repos:
 - facebook/fastspeech2-en-ljspeech
 - facebook/galactica-120b
 - facebook/m2m100_418M
+- facebook/mbart-large-50-many-to-many-mmt
 - facebook/musicgen-large
 - facebook/musicgen-melody
 - facebook/musicgen-small
@@ -88,6 +106,7 @@ repos:
 - facebook/opt-1.3b
 - facebook/opt-30b
 - facebook/opt-66b
+- facebook/seamless-expressive
 - facebook/seamless-m4t-large
 - facebook/seamless-m4t-v2-large
 - facebook/wav2vec2-base-960h
@@ -135,10 +154,15 @@ repos:
 - liuhaotian/llava-v1.5-7b
 - liuhaotian/llava-v1.5-7b-lora
 - liuhaotian/llava-v1.5-mlp2x-336px-pretrain-vicuna-7b-v1.5
+- liuhaotian/llava-v1.6-34b
+- liuhaotian/llava-v1.6-mistral-7b
+- liuhaotian/llava-v1.6-vicuna-13b
+- liuhaotian/llava-v1.6-vicuna-7b
 - liuhaotian/llava-vicuna-7b-v1.1-lcs_558k-instruct_80k_1e-lora-preview_alpha
 - llava-hf/bakLlava-v1-hf
 - llava-hf/llava-1.5-13b-hf
 - llava-hf/llava-1.5-7b-hf
+- llava-hf/llava-v1.6-mistral-7b-hf
 - llava-hf/vip-llava-13b-hf
 - llava-hf/vip-llava-7b-hf
 - microsoft/BioGPT-Large
@@ -159,6 +183,7 @@ repos:
 - microsoft/resnet-50
 - microsoft/speecht5_tts
 - microsoft/table-transformer-detection
+- microsoft/table-transformer-structure-recognition
 - microsoft/trocr-base-handwritten
 - microsoft/trocr-base-printed
 - mistralai/Mistral-7B-Instruct-v0.1
@@ -177,6 +202,7 @@ repos:
 - openai/shap-e
 - openai/shap-e-img2img
 - openai/whisper-base
+- openai/whisper-base.en
 - openai/whisper-large
 - openai/whisper-large-v2
 - openai/whisper-large-v3
@@ -187,6 +213,7 @@ repos:
 - openai/whisper-tiny
 - openai/whisper-tiny.en
 - openchat/openchat
+- openchat/openchat-3.5-0106
 - openchat/openchat-3.5-1210
 - openchat/openchat_3.5
 - openchat/openchat_8192
@@ -204,6 +231,8 @@ repos:
 - stabilityai/sd-vae-ft-mse-original
 - stabilityai/sdxl-turbo
 - stabilityai/sdxl-vae
+- stabilityai/stable-cascade
+- stabilityai/stable-code-3b
 - stabilityai/stable-diffusion-2
 - stabilityai/stable-diffusion-2-1
 - stabilityai/stable-diffusion-2-1-base
@@ -217,5 +246,6 @@ repos:
 - stabilityai/stable-diffusion-xl-refiner-1.0
 - stabilityai/stable-video-diffusion-img2vid
 - stabilityai/stable-video-diffusion-img2vid-xt
+- stabilityai/stable-zero123
 - stabilityai/stablecode-instruct-alpha-3b
 - stabilityai/stablelm-tuned-alpha-7b
