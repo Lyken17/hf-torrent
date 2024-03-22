@@ -8,6 +8,7 @@ api_token = os.environ["HF_API_TOKEN"]
 for org in [
     "facebook",
     "Intel",
+    "google",
     "microsoft",
     "stabilityai",
     "runwayml",
